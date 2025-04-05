@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{/Nva/Layout :: view(~{::main})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Quản lý giờ làm việc nhân viên</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <main th:fragment="content">
+        <div class="container-fluid mt-4">
+            <!-- Thông báo -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <h1 class="mb-4"><i class="fas fa-business-time"></i> Quản lý Giờ Làm Việc Nhân Viên</h1>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Danh sách nhân viên</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Mã Nhân Viên</th>
+                                <th>Tên Nhân Viên</th>
+                                <th>Tổng Giờ Làm</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.id}"></td>
+                                <td th:text="${user.fullName} ?: 'N/A'"></td>
+                                <td th:text="${userTotalHours[user.id] != null ? (userTotalHours[user.id].intValue() + ' giờ ' + ((userTotalHours[user.id] - userTotalHours[user.id].intValue()) * 60).intValue() + ' phút') : 'Chưa tính'}"></td>
+                                <td>
+                                    <a th:href="@{/Admin/WorkSchedule/detail(userId=${user.id})}" class="btn btn-sm btn-info" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i> Chi tiết
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${users == null or users.isEmpty()}">
+                                <td colspan="4" class="text-center text-muted">Không có dữ liệu nhân viên</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" th:fragment="view(content)">
+  <head th:replace="~{/Nva/Header}"></head>
+  <body>
+    <div th:replace="~{/Nva/Navar}"></div>
+    
+    <main class="content">
+      <div th:replace="${content}"></div>
+    </main>
+    <br><br>
+    <div class="footer" th:replace="~{/Nva/Footer}"></div>
+  </body>
+</html>
+

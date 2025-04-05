@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{/Nva/Layout :: view(~{::main})}">
+<head>
+    <title>Nhân viên - Hồ sơ cá nhân</title>
+</head>
+<body>
+    <main th:fragment="content">
+        <div class="container mt-4">
+            <div class="row">
+                <!-- Thông tin người dùng -->
+                <div class="col-md-4">
+                    <div class="card profile-card">
+                        <div class="card-body text-center">
+                            <img th:src="${user?.avatar ?: '/images/default-avatar.png'}"
+                                 class="rounded-circle mb-3"
+                                 alt="Avatar"
+                                 width="120">
+                            <h4 th:text="${user.fullName}"></h4>
+                            <p class="text-muted"
+                               th:text="${user.position?.positionName ?: 'Chưa có chức vụ'}"></p>
+                            <a href="/Profile/Edit" class="btn btn-primary mt-2">Chỉnh sửa hồ sơ</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chi tiết thông tin -->
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Thông tin cá nhân</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Email:</strong> <span th:text="${user.email ?: 'Chưa cập nhật'}"></span></p>
+                            <p><strong>Số điện thoại:</strong> <span th:text="${user.phone ?: 'Chưa cập nhật'}"></span></p>
+                            <p><strong>Địa chỉ:</strong> <span th:text="${user.address ?: 'Chưa cập nhật'}"></span></p>
+                            <p><strong>Ngày sinh:</strong> <span th:text="${user.dateOfBirth ?: 'Chưa cập nhật'}"></span></p>
+                            <p><strong>Ngày vào làm:</strong> <span th:text="${user.hireDate ?: 'Chưa cập nhật'}"></span></p>
+                            <p><strong>Trạng thái:</strong> <span th:text="${user.status ?: 'Chưa cập nhật'}"></span></p>
+                            <p><strong>Lần đăng nhập cuối:</strong> <span th:text="${user.lastLogin ?: 'Chưa đăng nhập'}"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

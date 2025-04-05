@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{/Nva/Layout :: view(~{::main})}">
+<head>
+    <title>Chỉnh sửa nhân viên</title>
+    <style>
+        .form-label {
+            font-weight: 600;
+        }
+        .form-section {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        h2.title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        .img-thumbnail {
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-radius: 8px;
+        }
+        .btn-secondary {
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <main th:fragment="content">
+        <div class="container mt-5 mb-5">
+            <!-- Thông báo -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <h2 class="title">
+                <i class="fas fa-user-edit me-2"></i> Chỉnh sửa nhân viên: 
+                <span th:text="${user.fullName} ?: 'Chưa có tên'"></span>
+            </h2>
+
+            <form th:action="@{/Admin/employees/edit/{id}(id=${user.id})}" 
+                  th:object="${user}" 
+                  method="post" 
+                  enctype="multipart/form-data"
+                  class="form-section">
+                <input type="hidden" th:field="*{id}" />
+
+                <!-- Ảnh đại diện -->
+                <div class="mb-4 text-center">
+                    <img th:src="${user.avatar} ?: '/img/default-avatar.jpg'" 
+                         class="img-thumbnail mb-3" 
+                         style="width: 150px; height: 150px; object-fit: cover;" />
+                    <input type="file" class="form-control" name="avatarFile" accept="image/*" />
+                </div>
+
+                <!-- Các trường form -->
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Mã nhân viên</label>
+                        <input type="text" class="form-control" th:field="*{userId}" />
+                        <div th:errors="*{userId}" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control" th:field="*{username}" required />
+                        <div th:errors="*{username}" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Mật khẩu</label>
+                        <input type="password" class="form-control" th:field="*{password}" th:value="${user.password}" />
+                        <div th:errors="*{password}" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Họ và tên</label>
+                        <input type="text" class="form-control" th:field="*{fullName}" required />
+                        <div th:errors="*{fullName}" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" th:field="*{email}" required />
+                        <div th:errors="*{email}" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" th:field="*{phone}" pattern="[0-9]{10}" />
+                        <div th:errors="*{phone}" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Địa chỉ</label>
+                        <input type="text" class="form-control" th:field="*{address}" />
+                        <div th:errors="*{address}" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="date" class="form-control" th:field="*{dateOfBirth}" />
+                        <div th:errors="*{dateOfBirth}" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Vị trí</label>
+                        <select class="form-select" th:field="*{position}">
+                            <option value="">-- Chọn vị trí --</option>
+                            <option value="1">Nhân viên</option>
+                            <option value="2">Quản lý</option>
+                            <option value="3">Trưởng phòng</option>
+                            <option value="4">Kế toán</option>
+                            <option value="5">Nhân sự</option>
+                        </select>
+                        <div th:errors="*{position}" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày vào làm</label>
+                        <input type="date" class="form-control" th:field="*{hireDate}" required />
+                        <div th:errors="*{hireDate}" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" th:field="*{status}">
+                            <option value="ACTIVE">Đang làm việc</option>
+                            <option value="INACTIVE">Đã nghỉ việc</option>
+                        </select>
+                        <div th:errors="*{status}" class="text-danger"></div>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- Thông tin thời gian -->
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Ngày tạo</label>
+                        <input type="text" class="form-control" 
+                               th:value="${user.createdAt != null ? user.createdAt.format(dateFormatter) : 'Chưa có'}" 
+                               readonly />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Ngày cập nhật</label>
+                        <input type="text" class="form-control" 
+                               th:value="${user.updatedAt != null ? user.updatedAt.format(dateFormatter) : 'Chưa cập nhật'}" 
+                               readonly />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Đăng nhập cuối</label>
+                        <input type="text" class="form-control" 
+                               th:value="${user.lastLogin != null ? user.lastLogin.format(dateFormatter) : 'Chưa đăng nhập'}" 
+                               readonly />
+                    </div>
+                </div>
+
+                <!-- Nút hành động -->
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-save me-1"></i> Lưu thay đổi
+                    </button>
+                    <a th:href="@{/Admin/employees}" class="btn btn-secondary">
+                        <i class="fas fa-times me-1"></i> Hủy bỏ
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

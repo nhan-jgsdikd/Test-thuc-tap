@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{/Nva/Layout :: view(~{::main})}">
+<head>
+    <title>Admin - Quản lý nhân sự</title>
+</head>
+<body>
+    <main th:fragment="content">
+        <div class="container-fluid mt-4">
+            <!-- Thông báo -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <h1 class="mb-4"><i class="fas fa-user-shield"></i> Quản lý nhân viên</h1>
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Danh sách nhân viên</h6>
+                    <a th:href="@{/Admin/employees/add}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i> Thêm mới
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Họ tên</th>
+                                    <th>Vị trí</th>
+                                    <th>Email</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Ngày vào làm</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="user : ${employees}">
+                                    <td th:text="${user.fullName} ?: 'Chưa cập nhật'"></td>
+                                    <td th:text="${user.position?.positionName} ?: 'Chưa xác định'"></td>
+                                    <td th:text="${user.email} ?: 'N/A'"></td>
+                                    <td th:text="${user.phone} ?: 'N/A'"></td>
+                                    <td th:text="${#temporals.format(user.hireDate, 'dd/MM/yyyy')} ?: 'N/A'"></td>
+                                    <td>
+                                        <span th:class="${user.status == 'ACTIVE'} ? 
+                                            'badge badge-success' : 'badge badge-danger'" 
+                                            style="color: white;"
+                                            th:text="${user.status == 'ACTIVE'} ? 
+                                            'Đang làm việc' : 'Đã nghỉ'">
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/Admin/employees/edit/{id}(id=${user.id})}" 
+                                           class="btn btn-primary btn-sm"
+                                           title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        
+                                        <!-- Form xóa ẩn -->
+                                        <form th:action="@{/Admin/employees/delete/{id}(id=${user.id})}" 
+                                              method="post" 
+                                              style="display: inline-block;"
+                                              onsubmit="return confirm('Bạn chắc chắn muốn xóa?');">
+                                            <button type="submit" 
+                                                    class="btn btn-danger btn-sm ml-1"
+                                                    title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{/Nva/Layout :: view(~{::main})}">
+<head>
+    <title>Admin - Chi tiết Chấm công</title>
+</head>
+<body>
+    <main th:fragment="content">
+        <div class="container-fluid mt-4">
+            <!-- Thông báo thành công -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <!-- Thông báo lỗi -->
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <!-- Tiêu đề -->
+            <h1 class="mb-4"><i class="fas fa-clock"></i> Chi tiết Chấm công của <span th:text="${user.fullName}"></span></h1>
+
+            <!-- Nút quay lại -->
+            <a th:href="@{/Admin/Attendance}" class="btn btn-secondary mb-3">Quay lại danh sách</a>
+
+            <!-- Bảng danh sách chấm công -->
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Giờ vào</th>
+                        <th>Giờ ra</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="attendance : ${attendanceList}">
+                        <td th:text="${attendance.date}">Ngày</td>
+                        <td th:text="${attendance.checkInTime}">Giờ vào</td>
+                        <td th:text="${attendance.checkOutTime != null ? attendance.checkOutTime : 'Chưa ghi nhận'}">Giờ ra</td>
+                        <td>
+                            <a th:href="@{/Admin/Attendance/edit/{attendanceId}(attendanceId=${attendance.id})}" 
+                               class="btn btn-primary btn-sm">Sửa</a>
+                            <form th:action="@{/Admin/Attendance/checkin/{userId}(userId=${user.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm">Chấm giờ vào</button>
+                            </form>
+                            <form th:action="@{/Admin/Attendance/checkout/{userId}(userId=${user.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-warning btn-sm">Chấm giờ ra</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(attendanceList)}">
+                        <td colspan="4" class="text-center">Chưa có dữ liệu chấm công</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Nút thêm chấm công -->
+            <a th:href="@{/Admin/Attendance/add/{userId}(userId=${user.id})}" 
+               class="btn btn-success mt-3">Thêm chấm công mới</a>
+        </div>
+    </main>
+</body>
+</html>

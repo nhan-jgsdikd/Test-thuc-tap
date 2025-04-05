@@ -1,0 +1,135 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" href="/">
+      <img src="/path-to-your-logo.png" alt="Logo HRM" class="logo">
+    </a>
+
+    <!-- Toggle Button for Mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Nav Content -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- Navigation Items -->
+      <ul class="navbar-nav me-auto">
+        <!-- Menu cho Admin -->
+        <li class="nav-item" th:if="${session.loggedInUser != null && session.loggedInUser.role == 'ADMIN'}">
+          <div class="dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="fa-solid fa-users-gear"></i> Quản lý
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/Admin">Thống kê</a></li>
+              <li><a class="dropdown-item" href="/Admin/employees">Nhân sự / Chức vụ</a></li>
+              <li><a class="dropdown-item" href="/Admin/WorkSchedule">Thời gian làm việc</a></li>
+              <li><a class="dropdown-item" href="/Admin/Attendance">Chấm công</a></li>
+              <li><a class="dropdown-item" href="/Admin/Payroll">Tính Lương</a></li>
+              <li><a class="dropdown-item" href="/admin/rewards-disciplines">Khen thưởng/Kỷ luật</a></li>
+
+            </ul>
+          </div>
+        </li>
+        
+        <!-- Menu cho Nhân viên -->
+        <li class="nav-item" th:if="${session.loggedInUser != null && session.loggedInUser.role == 'EMPLOYEE'}">
+          <a class="nav-link" href="/Employee">
+            <i class="fa-solid fa-fingerprint"></i> Chấm công
+          </a>
+          <a class="nav-link" href="/Profile">
+            <i class="fa-solid fa-fingerprint"></i> Trang cá nhân
+          </a>
+        </li>
+      </ul>
+
+      <!-- Right Side -->
+      <ul class="navbar-nav ms-auto">
+        <!-- Thông tin người dùng -->
+        <li class="nav-item" th:if="${session.loggedInUser != null}">
+          <div class="dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="fa-solid fa-user"></i> 
+              <span th:text="${session.loggedInUser.username}"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li th:if="${session.loggedInUser.role == 'NHANVIEN'}">
+                <a class="dropdown-item" href="/employee/profile">
+                  <i class="fa-solid fa-id-card"></i> Hồ sơ cá nhân
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item text-danger" href="/logout">
+                  <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        
+        <!-- Nút đăng nhập -->
+        <li class="nav-item" th:if="${session.loggedInUser == null}">
+          <a class="nav-link" href="/login">
+            <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<style>
+:root {
+--primary-color: #2c3e50;   /* Xanh đậm */
+--secondary-color: #3498db; /* Xanh nhạt */
+--bg-color: #f8f9fa;
+--shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+background: white;
+box-shadow: var(--shadow);
+}
+
+.logo {
+height: 40px;
+}
+
+.nav-link {
+color: var(--primary-color);
+font-weight: 500;
+transition: all 0.3s;
+}
+
+.nav-link:hover {
+color: var(--secondary-color);
+}
+
+.dropdown-menu {
+border: none;
+box-shadow: var(--shadow);
+}
+
+.dropdown-item {
+transition: all 0.2s;
+}
+
+.dropdown-item:hover {
+background: var(--secondary-color);
+color: white;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+.navbar-collapse {
+  padding: 1rem;
+  background: white;
+}
+
+.dropdown-menu {
+  border: none;
+  box-shadow: none;
+}
+}
+</style>

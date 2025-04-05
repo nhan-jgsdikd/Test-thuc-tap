@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{/Nva/Layout :: view(~{::main})}">
+<head>
+    <title>Admin - Quản lý Chấm công</title>
+    <style>
+        .user-card { 
+            border: 1px solid #ddd; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            border-radius: 5px; 
+            background-color: #f9f9f9; 
+        }
+        .user-actions { 
+            margin-top: 10px; 
+        }
+        .form-container { 
+            margin-top: 20px; 
+            padding: 20px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            background-color: #fff; 
+        }
+    </style>
+</head>
+<body>
+    <main th:fragment="content">
+        <div class="container-fluid mt-4">
+            <!-- Thông báo thành công -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- Thông báo lỗi -->
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <h1 class="mb-4"><i class="fas fa-user-shield"></i> Quản lý Chấm công</h1>
+
+            <!-- Danh sách người dùng -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div th:each="user : ${users}" class="user-card">
+                        <h5 th:text="${user.fullName}">User Full Name</h5>
+                        <div class="user-actions">
+                            <a th:href="@{/Admin/Attendance/detail/{userId}(userId=${user.id})}" 
+                               class="btn btn-info btn-sm mr-2">Chi tiết chấm công</a>
+                            <a th:href="@{/Admin/Attendance/add/{userId}(userId=${user.id})}" 
+                               class="btn btn-primary btn-sm mr-2">Thêm chấm công</a>
+                            <form th:action="@{/Admin/Attendance/checkin/{userId}(userId=${user.id})}" 
+                                  method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm mr-2">Chấm giờ vào</button>
+                            </form>
+                            <form th:action="@{/Admin/Attendance/checkout/{userId}(userId=${user.id})}" 
+                                  method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-warning btn-sm">Chấm giờ ra</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div th:if="${#lists.isEmpty(users)}" class="text-center">
+                        <p>Chưa có người dùng nào.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form thêm chấm công (hiển thị khi truy cập /add/{userId}) -->
+            <div th:if="${user}" class="form-container">
+                <h2>Thêm chấm công cho <span th:text="${user.fullName}"></span></h2>
+                <form th:action="@{/Admin/Attendance/add/{userId}(userId=${user.id})}" method="post">
+                    <div class="form-group row">
+                        <label for="date" class="col-sm-2 col-form-label">Ngày:</label>
+                        <div class="col-sm-10">
+                            <input type="date" name="date" id="date" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="checkInTime" class="col-sm-2 col-form-label">Giờ vào:</label>
+                        <div class="col-sm-10">
+                            <input type="time" name="checkInTime" id="checkInTime" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="checkOutTime" class="col-sm-2 col-form-label">Giờ ra (không bắt buộc):</label>
+                        <div class="col-sm-10">
+                            <input type="time" name="checkOutTime" id="checkOutTime" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-primary">Chấm công</button>
+                            <a th:href="@{/Admin/Attendance}" class="btn btn-secondary">Hủy</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

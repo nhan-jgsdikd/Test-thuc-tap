@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{/Nva/Layout :: view(~{::main})}">
+<head>
+    <title>Nhân viên - Quản lý nhân sự</title>
+</head>
+<body>
+    <main th:fragment="content">
+        <div class="container mt-4">
+            <div class="row">
+                <!-- Thông tin người dùng -->
+                <div class="col-md-4">
+                    <div class="card profile-card">
+                        <div class="card-body text-center">
+                            <img th:src="${user?.avatar ?: '/images/default-avatar.png'}"
+                                 class="rounded-circle mb-3"
+                                 alt="Avatar"
+                                 width="120">
+                            <h4 th:text="${user.fullName}"></h4>
+                            <p class="text-muted"
+                               th:text="${user.position?.positionName ?: 'Chưa có chức vụ'}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chấm công và lịch sử -->
+                <div class="col-md-8">
+                    <!-- Phần chấm công hôm nay -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4><i class="fas fa-fingerprint"></i> Chấm công hôm nay</h4>
+                            <div class="row" id="attendanceSection">
+                                <div class="col-md-6 mb-2">
+                                    <button class="btn btn-primary w-100" 
+                                            onclick="handleCheckIn()"
+                                            th:disabled="${todayAttendance?.checkInTime != null}">
+                                        <i class="fas fa-sign-in-alt"></i> 
+                                        <span th:unless="${todayAttendance?.checkInTime}">
+                                            Check In
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-danger w-100" 
+                                            onclick="handleCheckOut()"
+                                            th:disabled="${todayAttendance?.checkOutTime != null}">
+                                        <i class="fas fa-sign-out-alt"></i> 
+                                        <span th:unless="${todayAttendance?.checkOutTime}">
+                                            Check Out
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="messageContainer" class="mt-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Lịch sử chấm công -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h4><i class="fas fa-history"></i> Lịch sử chấm công</h4>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Ngày</th>
+                                        <th>Giờ vào</th>
+                                        <th>Giờ ra</th>
+                                        <th>Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="att : ${attendanceHistory}">
+                                        <td th:text="${#temporals.format(att.date, 'dd/MM/yyyy')}"></td>
+                                        <td th:text="${att.checkInTime ?: '--'}"></td>
+                                        <td th:text="${att.checkOutTime ?: '--'}"></td>
+                                        <td>
+                                            <span class="badge" 
+                                                  th:classappend="${(att.status == 'Đúng giờ') ? 'bg-success' : (att.status == 'Muộn') ? 'bg-warning' : 'bg-danger'}"
+                                                  th:text="${att.status}">
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(attendanceHistory)}">
+                                        <td colspan="4" class="text-center">Không có lịch sử chấm công</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function showMessage(message, isError = false) {
+                const container = document.getElementById('messageContainer');
+                container.innerHTML = `
+                    <div class="alert alert-${isError ? 'danger' : 'success'} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+            }
+
+            async function handleCheckIn() {
+                try {
+                    const response = await fetch('/Employee/check-in', { method: 'POST' });
+                    const data = await response.text();
+                    if (response.ok) {
+                        location.reload(); // Reload để cập nhật trạng thái
+                    } else {
+                        showMessage(data, true);
+                    }
+                } catch (error) {
+                    showMessage('Lỗi kết nối', true);
+                }
+            }
+
+            async function handleCheckOut() {
+                try {
+                    const response = await fetch('/Employee/check-out', { method: 'POST' });
+                    const data = await response.text();
+                    if (response.ok) {
+                        location.reload(); // Reload để cập nhật trạng thái
+                    } else {
+                        showMessage(data, true);
+                    }
+                } catch (error) {
+                    showMessage('Lỗi kết nối', true);
+                }
+            }
+        </script>
+    </main>
+</body>
+</html>
