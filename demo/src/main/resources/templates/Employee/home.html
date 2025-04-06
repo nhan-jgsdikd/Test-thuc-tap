@@ -224,8 +224,7 @@
                                 <td th:text="${att.checkOutTime ?: '--'}"></td>
                                 <td>
                                     <span class="status-dot"
-                                          th:classappend="${att.status == 'Đúng giờ'} ? 'bg-success' :
-                                                          ${att.status == 'Muộn'} ? 'bg-warning' : 'bg-danger'"></span>
+                                          th:classappend="${att.status == 'Đúng giờ' ? 'bg-success' : att.status == 'Muộn' ? 'bg-warning' : 'bg-danger'}"></span>
                                     <span th:text="${att.status}">--</span>
                                 </td>
                             </tr>

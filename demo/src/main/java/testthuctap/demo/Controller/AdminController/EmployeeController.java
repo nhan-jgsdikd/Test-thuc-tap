@@ -9,7 +9,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 import testthuctap.demo.Model.Attendance;
 import testthuctap.demo.Model.User;
-import testthuctap.demo.Model.WorkSchedule;
 import testthuctap.demo.Service.AttendanceService;
 import testthuctap.demo.Service.UserService;
 import testthuctap.demo.Service.WorkScheduleService;
@@ -113,53 +112,57 @@ public class EmployeeController {
     public ResponseEntity<?> checkIn(HttpSession session) {
         User user = getLoggedInUser(session);
         if (user == null) return unauthorizedResponse();
-    
+
         Optional<Attendance> todayAttendance = attendanceService.getTodayAttendance(user.getId());
-    
+
         if (todayAttendance.isPresent() && todayAttendance.get().getCheckInTime() != null) {
             return ResponseEntity.badRequest().body("Bạn đã check-in hôm nay");
         }
-    
+
         Attendance attendance = todayAttendance.orElseGet(() -> new Attendance());
         attendance.setUser(user);
         attendance.setDate(LocalDate.now());
         attendance.setCheckInTime(LocalTime.now());
         attendance.setStatus("PRESENT");
         attendance.setCreatedAt(LocalDateTime.now());
-    
-        attendanceService.updateAttendance(attendance);
-    
+
+        // Nếu là bản ghi mới (ID null), dùng createAttendance thay vì updateAttendance
+        if (attendance.getId() == null) {
+            attendanceService.createAttendance(attendance);
+        } else {
+            attendanceService.updateAttendance(attendance);
+        }
+
         return ResponseEntity.ok("Check-in thành công lúc " + attendance.getCheckInTime());
     }
-    
+
     @PostMapping("/Employee/check-out")
     @ResponseBody
     public ResponseEntity<?> checkOut(HttpSession session) {
         User user = getLoggedInUser(session);
         if (user == null) return unauthorizedResponse();
-    
+
         Optional<Attendance> todayAttendanceOpt = attendanceService.getTodayAttendance(user.getId());
-    
+
         if (todayAttendanceOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Bạn chưa check-in hôm nay");
         }
-    
+
         Attendance todayAttendance = todayAttendanceOpt.get();
         if (todayAttendance.getCheckOutTime() != null) {
             return ResponseEntity.badRequest().body("Bạn đã check-out hôm nay");
         }
-    
+
         todayAttendance.setCheckOutTime(LocalTime.now());
         todayAttendance.setStatus(attendanceService.calculateAttendanceStatus(
             todayAttendance.getCheckInTime(),
             todayAttendance.getCheckOutTime()
         ));
-    
+
         attendanceService.updateAttendance(todayAttendance);
-    
+
         return ResponseEntity.ok("Check-out thành công lúc " + todayAttendance.getCheckOutTime());
     }
-    
 
     @GetMapping("/employee/history")
     @ResponseBody

@@ -39,4 +39,9 @@ public class Attendance {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public void setUpdatedAt(LocalDateTime now) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setUpdatedAt'");
+    }
 }

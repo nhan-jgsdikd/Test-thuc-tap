@@ -1,80 +1,109 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
       th:replace="~{/Nva/Layout :: view(~{::main})}">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin - Quản lý nhân sự</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <main th:fragment="content">
         <div class="container-fluid mt-4">
-            <!-- Thông báo -->
-            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-                <span th:text="${success}"></span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            
-            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                <span th:text="${error}"></span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+            <div class="container">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="mb-4">
+                        <i class="fas fa-user-shield"></i> 
+                        <a href="/Admin">Trang quản trị</a>
+                    </div>
+                    <nav>
+                        <ul class="active">
+                            <li><a href="/Admin/employees">Quản lý nhân sự</a></li>
+                            <li><a href="/Admin/Attendance">Quản lý chấm công</a></li>
+                            <li><a href="/Admin/Payroll">Quản lý lương</a></li>
+                            <li><a href="/Admin/WorkSchedule">Quản lý giờ làm việc</a></li>
+                        </ul>
+                    </nav>
+                </aside>
 
-            <h1 class="mb-4"><i class="fas fa-user-shield"></i> Quản lý nhân viên</h1>
+                <!-- Main Content -->
+                <main class="main-content">
+                    <header class="topbar">
+                        <div class="company-info">
+                            <span class="name" style="font-weight: bold;">AZ</span>
+                            <span>Media</span>
+                        </div>
+                        <div class="logo-test">Testthuctap</div>
+                    </header>
 
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Danh sách nhân viên</h6>
-                    <a th:href="@{/Admin/employees/add}" class="btn btn-success btn-sm">
-                        <i class="fas fa-plus"></i> Thêm mới
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead class="thead-dark">
+                    <section class="user-info">
+                        <img th:src="${user?.avatar ?: 'https://randomuser.me/api/portraits/women/44.jpg'}" 
+                             alt="User Avatar" 
+                             class="avatar" />
+                        <div class="text">
+                            <h2 th:text="'Hi, ' + ${user?.fullName ?: 'Admin'}"></h2>
+                            <p>Chào mừng bạn đến với hệ thống quản lý nhân sự</p>
+                        </div>
+                    </section>
+
+                    <div class="action-bar">
+                        <a th:href="@{/Admin/employees/add}" class="btn btn-add">
+                            <i class="fas fa-plus"></i> Thêm nhân viên
+                        </a>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="employee-table">
+                            <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Họ tên</th>
-                                    <th>Vị trí</th>
+                                    <th>Ảnh</th>
                                     <th>Email</th>
-                                    <th>Số điện thoại</th>
+                                    <th>Chức vụ</th>
+                                    <th>Điện thoại</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Ngày sinh</th>
                                     <th>Ngày vào làm</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thao tác</th>
+                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="user : ${employees}">
-                                    <td th:text="${user.fullName} ?: 'Chưa cập nhật'"></td>
-                                    <td th:text="${user.position?.positionName} ?: 'Chưa xác định'"></td>
-                                    <td th:text="${user.email} ?: 'N/A'"></td>
-                                    <td th:text="${user.phone} ?: 'N/A'"></td>
-                                    <td th:text="${#temporals.format(user.hireDate, 'dd/MM/yyyy')} ?: 'N/A'"></td>
+                                    <td th:text="${user.id} ?: 'N/A'"></td>
+                                    <td th:text="${user.fullName} ?: 'N/A'"></td>
                                     <td>
-                                        <span th:class="${user.status == 'ACTIVE'} ? 
-                                            'badge badge-success' : 'badge badge-danger'" 
-                                            style="color: white;"
-                                            th:text="${user.status == 'ACTIVE'} ? 
-                                            'Đang làm việc' : 'Đã nghỉ'">
-                                        </span>
+                                        <div class="avatar-container">
+                                            <img th:src="@{${user.avatar}}" 
+                                                 th:if="${user.avatar != null and user.avatar != ''}"
+                                                 alt="Avatar" 
+                                                 class="avatar" 
+                                                 onload="this.style.display='block'" 
+                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" 
+                                                 style="display: none;" />
+                                            <span class="no-avatar" 
+                                                  th:unless="${user.avatar != null and user.avatar != ''}" 
+                                                  style="display: block;">N/A</span>
+                                        </div>
                                     </td>
-                                    <td>
+                                    <td th:text="${user.email} ?: 'N/A'"></td
+                                    <td th:text="${user.position?.positionName} ?: 'N/A'"></td>
+                                    <td th:text="${user.phone} ?: 'N/A'"></td>
+                                    <td th:text="${user.address} ?: 'N/A'"></td>
+                                    <td th:text="${user.dateOfBirth != null} ? ${#temporals.format(user.dateOfBirth, 'dd/MM/yyyy')} : 'N/A'"></td>
+                                    <td th:text="${user.hireDate != null} ? ${#temporals.format(user.hireDate, 'dd/MM/yyyy')} : 'N/A'"></td>
+                                    <td class="actions">
                                         <a th:href="@{/Admin/employees/edit/{id}(id=${user.id})}" 
-                                           class="btn btn-primary btn-sm"
-                                           title="Chỉnh sửa">
+                                           class="btn btn-edit" 
+                                           title="Sửa">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        
-                                        <!-- Form xóa ẩn -->
                                         <form th:action="@{/Admin/employees/delete/{id}(id=${user.id})}" 
                                               method="post" 
-                                              style="display: inline-block;"
-                                              onsubmit="return confirm('Bạn chắc chắn muốn xóa?');">
-                                            <button type="submit" 
-                                                    class="btn btn-danger btn-sm ml-1"
-                                                    title="Xóa">
+                                              class="delete-form" 
+                                              onsubmit="return confirm('Bạn chắc chắn muốn xóa nhân viên này?');">
+                                            <button type="submit" class="btn btn-delete" title="Xóa">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -83,10 +112,224 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </main>
             </div>
-
         </div>
+
+        <!-- Inline CSS -->
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Segoe UI', sans-serif;
+            }
+
+            .container {
+                display: flex;
+                width: 100%;
+            }
+
+            .sidebar {
+                width: 220px;
+                background: #2d2d2d;
+                color: #fff;
+                padding: 20px;
+                min-height: 100vh;
+            }
+
+            .sidebar .mb-4 {
+                font-weight: bold;
+                font-size: 18px;
+            }
+
+            .sidebar ul {
+                list-style: none;
+            }
+
+            .sidebar li {
+                padding: 10px 0;
+                cursor: pointer;
+                border-left: 4px solid transparent;
+                padding-left: 10px;
+            }
+
+            .sidebar li.active,
+            .sidebar li:hover {
+                background: #444;
+                border-left: 4px solid #4fc3f7;
+            }
+
+            .sidebar a {
+                color: #fff;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+            .main-content {
+                flex: 1;
+                background: #f5f7fa;
+                padding: 20px;
+            }
+
+            .topbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: #007bff;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+
+            .logo-test {
+                font-weight: bold;
+                font-size: 20px;
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+
+            .user-info .avatar {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                margin-right: 15px;
+                object-fit: cover;
+            }
+
+            .user-info .text h2 {
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+
+            .user-info .text p {
+                color: #666;
+            }
+
+            .action-bar {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .btn-add {
+                background: #28a745;
+                color: #fff;
+            }
+
+            .btn-add:hover {
+                background: #218838;
+            }
+
+            .btn-edit {
+                background: #007bff;
+                color: #fff;
+            }
+
+            .btn-edit:hover {
+                background: #0069d9;
+            }
+
+            .btn-delete {
+                background: #dc3545;
+                color: #fff;
+            }
+
+            .btn-delete:hover {
+                background: #c82333;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+            }
+
+            .employee-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 14px;
+            }
+
+            .employee-table th,
+            .employee-table td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .employee-table th {
+                background: #f8fafc;
+                font-weight: 600;
+                color: #4a5568;
+            }
+
+            .employee-table tr:hover {
+                background: #f7fafc;
+            }
+
+            .avatar-container {
+                position: relative;
+                width: 60px;
+                height: 60px;
+            }
+
+            .avatar {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .no-avatar {
+                display: inline-block;
+                width: 60px;
+                height: 60px;
+                line-height: 60px;
+                text-align: center;
+                background: #e2e8f0;
+                border-radius: 50%;
+                color: #718096;
+                font-size: 14px;
+            }
+
+            .actions {
+                display: flex;
+                gap: 10px;
+                white-space: nowrap;
+            }
+
+            .delete-form {
+                display: inline-block;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .sidebar {
+                    width: 100%;
+                    min-height: auto;
+                }
+                .container {
+                    flex-direction: column;
+                }
+            }
+        </style>
     </main>
 </body>
 </html>

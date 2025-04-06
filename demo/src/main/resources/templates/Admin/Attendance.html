@@ -1,109 +1,433 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
       th:replace="~{/Nva/Layout :: view(~{::main})}">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin - Quản lý Chấm công</title>
-    <style>
-        .user-card { 
-            border: 1px solid #ddd; 
-            padding: 15px; 
-            margin-bottom: 15px; 
-            border-radius: 5px; 
-            background-color: #f9f9f9; 
-        }
-        .user-actions { 
-            margin-top: 10px; 
-        }
-        .form-container { 
-            margin-top: 20px; 
-            padding: 20px; 
-            border: 1px solid #ddd; 
-            border-radius: 5px; 
-            background-color: #fff; 
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <main th:fragment="content">
         <div class="container-fluid mt-4">
-            <!-- Thông báo thành công -->
-            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-                <span th:text="${success}"></span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+            <div class="container">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="mb-4">
+                        <i class="fas fa-user-shield"></i> 
+                        <a href="/Admin">Trang quản trị</a>
+                    </div>
+                    <nav>
+                        <ul class="active">
+                            <li><a href="/Admin/employees">Quản lý nhân sự</a></li>
+                            <li><a href="/Admin/Attendance">Quản lý chấm công</a></li>
+                            <li><a href="/Admin/Payroll">Quản lý lương</a></li>
+                            <li><a href="/Admin/WorkSchedule">Quản lý giờ làm việc</a></li>
+                        </ul>
+                    </nav>
+                </aside>
 
-            <!-- Thông báo lỗi -->
-            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                <span th:text="${error}"></span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                <!-- Main Content -->
+                <main class="main-content">
+                    <header class="topbar">
+                        <div class="company-info">
+                            <span class="name" style="font-weight: bold;">AZ</span>
+                            <span>Media</span>
+                        </div>
+                        <div class="logo-test">Testthuctap</div>
+                    </header>
 
-            <h1 class="mb-4"><i class="fas fa-user-shield"></i> Quản lý Chấm công</h1>
+                    <section class="user-info">
+                        <img th:src="${user?.avatar ?: 'https://randomuser.me/api/portraits/women/44.jpg'}" 
+                             alt="User Avatar" 
+                             class="avatar" />
+                        <div class="text">
+                            <h2 th:text="'Hi, ' + ${user?.fullName ?: 'Admin'}"></h2>
+                            <p>Chào mừng bạn đến với hệ thống quản lý chấm công</p>
+                        </div>
+                    </section>
 
-            <!-- Danh sách người dùng -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div th:each="user : ${users}" class="user-card">
-                        <h5 th:text="${user.fullName}">User Full Name</h5>
-                        <div class="user-actions">
-                            <a th:href="@{/Admin/Attendance/detail/{userId}(userId=${user.id})}" 
-                               class="btn btn-info btn-sm mr-2">Chi tiết chấm công</a>
-                            <a th:href="@{/Admin/Attendance/add/{userId}(userId=${user.id})}" 
-                               class="btn btn-primary btn-sm mr-2">Thêm chấm công</a>
-                            <form th:action="@{/Admin/Attendance/checkin/{userId}(userId=${user.id})}" 
-                                  method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-success btn-sm mr-2">Chấm giờ vào</button>
-                            </form>
-                            <form th:action="@{/Admin/Attendance/checkout/{userId}(userId=${user.id})}" 
-                                  method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-warning btn-sm">Chấm giờ ra</button>
-                            </form>
+                    <!-- Notifications -->
+                    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                    <!-- User List -->
+                    <div class="section-title">
+                        <h2><i class="fas fa-calendar-check"></i> Quản lý Chấm công</h2>
+                    </div>
+                    <div class="user-list">
+                        <div th:each="user : ${users}" class="user-card">
+                            <div class="user-info">
+                                <h5 th:text="${user.fullName} ?: 'Chưa cập nhật'"></h5>
+                            </div>
+                            <div class="user-actions">
+                                <a th:href="@{/Admin/Attendance/detail/{userId}(userId=${user.id})}" 
+                                   class="btn btn-info" title="Chi tiết">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                <a th:href="@{/Admin/Attendance/add/{userId}(userId=${user.id})}" 
+                                   class="btn btn-add" title="Thêm chấm công">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                                <form th:action="@{/Admin/Attendance/checkin/{userId}(userId=${user.id})}" 
+                                      method="post" class="action-form">
+                                    <button type="submit" class="btn btn-checkin" title="Chấm giờ vào">
+                                        <i class="fas fa-sign-in-alt"></i>
+                                    </button>
+                                </form>
+                                <form th:action="@{/Admin/Attendance/checkout/{userId}(userId=${user.id})}" 
+                                      method="post" class="action-form">
+                                    <button type="submit" class="btn btn-checkout" title="Chấm giờ ra">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div th:if="${#lists.isEmpty(users)}" class="empty-state">
+                            <i class="fas fa-users-slash fa-3x"></i>
+                            <p>Chưa có người dùng nào.</p>
                         </div>
                     </div>
-                    <div th:if="${#lists.isEmpty(users)}" class="text-center">
-                        <p>Chưa có người dùng nào.</p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Form thêm chấm công (hiển thị khi truy cập /add/{userId}) -->
-            <div th:if="${user}" class="form-container">
-                <h2>Thêm chấm công cho <span th:text="${user.fullName}"></span></h2>
-                <form th:action="@{/Admin/Attendance/add/{userId}(userId=${user.id})}" method="post">
-                    <div class="form-group row">
-                        <label for="date" class="col-sm-2 col-form-label">Ngày:</label>
-                        <div class="col-sm-10">
-                            <input type="date" name="date" id="date" class="form-control" required />
+                    <!-- Add Attendance Form -->
+                    <div th:if="${user}" class="form-container">
+                        <div class="section-title">
+                            <h3>Thêm chấm công cho <span th:text="${user.fullName}"></span></h3>
                         </div>
+                        <form th:action="@{/Admin/Attendance/add/{userId}(userId=${user.id})}" method="post">
+                            <div class="form-group">
+                                <label for="date">Ngày:</label>
+                                <input type="date" name="date" id="date" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="checkInTime">Giờ vào:</label>
+                                <input type="time" name="checkInTime" id="checkInTime" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="checkOutTime">Giờ ra (tùy chọn):</label>
+                                <input type="time" name="checkOutTime" id="checkOutTime" class="form-control" />
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-submit">Chấm công</button>
+                                <a th:href="@{/Admin/Attendance}" class="btn btn-cancel">Hủy</a>
+                            </div>
+                        </form>
                     </div>
-
-                    <div class="form-group row">
-                        <label for="checkInTime" class="col-sm-2 col-form-label">Giờ vào:</label>
-                        <div class="col-sm-10">
-                            <input type="time" name="checkInTime" id="checkInTime" class="form-control" required />
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="checkOutTime" class="col-sm-2 col-form-label">Giờ ra (không bắt buộc):</label>
-                        <div class="col-sm-10">
-                            <input type="time" name="checkOutTime" id="checkOutTime" class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-sm-10 offset-sm-2">
-                            <button type="submit" class="btn btn-primary">Chấm công</button>
-                            <a th:href="@{/Admin/Attendance}" class="btn btn-secondary">Hủy</a>
-                        </div>
-                    </div>
-                </form>
+                </main>
             </div>
         </div>
+
+        <!-- Inline CSS -->
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Segoe UI', sans-serif;
+            }
+
+            .container {
+                display: flex;
+                width: 100%;
+            }
+
+            .sidebar {
+                width: 220px;
+                background: #2d2d2d;
+                color: #fff;
+                padding: 20px;
+                min-height: 100vh;
+            }
+
+            .sidebar .mb-4 {
+                font-weight: bold;
+                font-size: 18px;
+            }
+
+            .sidebar ul {
+                list-style: none;
+            }
+
+            .sidebar li {
+                padding: 10px 0;
+                cursor: pointer;
+                border-left: 4px solid transparent;
+                padding-left: 10px;
+            }
+
+            .sidebar li.active,
+            .sidebar li:hover {
+                background: #444;
+                border-left: 4px solid #4fc3f7;
+            }
+
+            .sidebar a {
+                color: #fff;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+            .main-content {
+                flex: 1;
+                background: #f5f7fa;
+                padding: 20px;
+            }
+
+            .topbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: #007bff;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+
+            .logo-test {
+                font-weight: bold;
+                font-size: 20px;
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+
+            .user-info .avatar {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                margin-right: 15px;
+                object-fit: cover;
+            }
+
+            .user-info .text h2 {
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+
+            .user-info .text p {
+                color: #666;
+            }
+
+            .section-title {
+                margin-bottom: 20px;
+            }
+
+            .section-title h2,
+            .section-title h3 {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: #2c3e50;
+                font-weight: 700;
+            }
+
+            .alert {
+                padding: 12px 20px;
+                margin-bottom: 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            }
+
+            .alert-success {
+                background: #dff0d8;
+                color: #3c763d;
+            }
+
+            .alert-danger {
+                background: #f2dede;
+                color: #a94442;
+            }
+
+            /* User List */
+            .user-list {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .user-card {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px;
+                background: #f9fbfc;
+                border-radius: 10px;
+                border: 1px solid #ecf0f1;
+                transition: all 0.3s ease;
+            }
+
+            .user-card:hover {
+                background: #f5f7fa;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            }
+
+            .user-info h5 {
+                margin: 0;
+                font-size: 16px;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .user-actions {
+                display: flex;
+                gap: 12px;
+            }
+
+            .action-form {
+                display: inline-block;
+            }
+
+            /* Form */
+            .form-container {
+                margin-top: 30px;
+                padding: 25px;
+                background: #f9fbfc;
+                border-radius: 10px;
+                border: 1px solid #ecf0f1;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                color: #2c3e50;
+                margin-bottom: 8px;
+                font-size: 14px;
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 10px 15px;
+                border: 1px solid #ecf0f1;
+                border-radius: 8px;
+                font-size: 14px;
+                background: #fff;
+                transition: all 0.3s ease;
+            }
+
+            .form-control:focus {
+                outline: none;
+                border-color: #3498db;
+                box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            }
+
+            .form-actions {
+                display: flex;
+                gap: 12px;
+            }
+
+            /* Buttons */
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .btn-info {
+                background: #3498db;
+                color: #fff;
+            }
+
+            .btn-info:hover {
+                background: #2980b9;
+                transform: translateY(-2px);
+            }
+
+            .btn-add {
+                background: #27ae60;
+                color: #fff;
+            }
+
+            .btn-add:hover {
+                background: #219653;
+                transform: translateY(-2px);
+            }
+
+            .btn-checkin {
+                background: #3498db;
+                color: #fff;
+            }
+
+            .btn-checkin:hover {
+                background: #2980b9;
+                transform: translateY(-2px);
+            }
+
+            .btn-checkout {
+                background: #f1c40f;
+                color: #2c3e50;
+            }
+
+            .btn-checkout:hover {
+                background: #e1b10e;
+                transform: translateY(-2px);
+            }
+
+            .btn-submit {
+                background: #3498db;
+                color: #fff;
+            }
+
+            .btn-submit:hover {
+                background: #2980b9;
+                transform: translateY(-2px);
+            }
+
+            .btn-cancel {
+                background: #95a5a6;
+                color: #fff;
+            }
+
+            .btn-cancel:hover {
+                background: #7f8c8d;
+                transform: translateY(-2px);
+            }
+
+            /* Empty State */
+            .empty-state {
+                text-align: center;
+                padding: 50px;
+                color: #7f8c8d;
+            }
+
+            .empty-state i {
+                font-size: 48px;
+                margin-bottom: 15px;
+            }
+
+            .empty-state p {
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .sidebar {
+                    width: 100%;
+                    min-height: auto;
+                }
+                .container {
+                    flex-direction: column;
+                }
+            }
+        </style>
     </main>
 </body>
 </html>

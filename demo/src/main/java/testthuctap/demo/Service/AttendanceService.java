@@ -27,24 +27,20 @@ public class AttendanceService {
     }
 
     @Transactional
-    public Attendance createAttendance(Long userId, LocalDate date, LocalTime checkInTime, LocalTime checkOutTime) {
-        User user = userDAO.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-
-        // Validate đầu vào
-        if (date == null || checkInTime == null) {
-            throw new IllegalArgumentException("Date and check-in time cannot be null");
+    public Attendance createAttendance(Attendance attendance) {
+        if (attendance == null || attendance.getUser() == null || attendance.getDate() == null) {
+            throw new IllegalArgumentException("Attendance, user, or date cannot be null");
         }
 
-        Attendance attendance = Attendance.builder()
-                .user(user)
-                .date(date)
-                .checkInTime(checkInTime)
-                .checkOutTime(checkOutTime)
-                .status(calculateAttendanceStatus(checkInTime, checkOutTime))
-                .note(null) // Có thể để trống hoặc thêm logic để ghi chú
-                .createdAt(LocalDateTime.now())
-                .build();
+        // Đảm bảo user tồn tại trong DB
+        User user = userDAO.findById(attendance.getUser().getId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + attendance.getUser().getId()));
+
+        attendance.setUser(user);
+        attendance.setStatus(calculateAttendanceStatus(attendance.getCheckInTime(), attendance.getCheckOutTime()));
+        if (attendance.getCreatedAt() == null) {
+            attendance.setCreatedAt(LocalDateTime.now());
+        }
 
         return attendanceDAO.save(attendance);
     }
@@ -55,9 +51,19 @@ public class AttendanceService {
             throw new IllegalArgumentException("Attendance or attendance ID cannot be null");
         }
 
-        // Cập nhật trạng thái khi sửa giờ vào/ra
-        attendance.setStatus(calculateAttendanceStatus(attendance.getCheckInTime(), attendance.getCheckOutTime()));
-        return attendanceDAO.save(attendance);
+        // Đảm bảo bản ghi tồn tại trước khi cập nhật
+        Attendance existingAttendance = attendanceDAO.findById(attendance.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Attendance not found with id: " + attendance.getId()));
+
+        // Cập nhật các trường cần thiết
+        existingAttendance.setCheckInTime(attendance.getCheckInTime());
+        existingAttendance.setCheckOutTime(attendance.getCheckOutTime());
+        existingAttendance.setStatus(calculateAttendanceStatus(attendance.getCheckInTime(), attendance.getCheckOutTime()));
+        existingAttendance.setNote(attendance.getNote());
+        existingAttendance.setCreatedAt(attendance.getCreatedAt()); // Giữ nguyên createdAt từ bản ghi cũ nếu không thay đổi
+        existingAttendance.setUser(attendance.getUser());
+
+        return attendanceDAO.save(existingAttendance);
     }
 
     public List<Attendance> getAttendanceByUserId(Long userId) {
@@ -96,7 +102,7 @@ public class AttendanceService {
         String status = "Đúng giờ";
 
         // Kiểm tra giờ vào
-        if (checkInTime.isAfter(startTime)) {
+        if (checkInTime != null && checkInTime.isAfter(startTime)) {
             status = "Muộn";
         }
 
@@ -112,10 +118,5 @@ public class AttendanceService {
         }
 
         return status;
-    }
-
-    public void saveAttendance(Attendance attendance) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveAttendance'");
     }
 }

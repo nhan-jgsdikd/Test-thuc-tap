@@ -2,40 +2,240 @@
 <html xmlns:th="http://www.thymeleaf.org" 
       th:replace="~{/Nva/Layout :: view(~{::main})}">
 <head>
-    <title>Admin - Quản lý nhân sự</title>
+    <title>Admin - Quản lý chấm công</title>
 </head>
 <body>
     <main th:fragment="content">
         <div class="container-fluid mt-4">
-            <h1 class="mb-4"><i class="fas fa-user-shield"></i> Trang quản trị</h1>
-            
-            <!-- Thống kê nhanh -->
-            <div class="row quick-stats">
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">
-                            <h5><i class="fas fa-users"></i> Tổng nhân viên</h5>
-                            <h3 th:text="${totalEmployees}">0</h3>
-                        </div>
+            <div class="container">
+                <aside class="sidebar">
+                    <div class="mb-4">
+                        <i class="fas fa-user-shield"></i> 
+                        <a href="/Admin">Trang quản trị</a>
                     </div>
-                </div>
-                <!-- Thêm các thống kê khác -->
-            </div>
+                    <nav>
+                        <ul class="active">
+                            <li><a href="/Admin/employees">Quản lý nhân sự</a></li>
+                            <li><a href="/Admin/Attendance">Quản lý chấm công</a></li>
+                            <li><a href="/Admin/Payroll">Quản lý lương</a></li>
+                            <li><a href="/Admin/WorkSchedule">Quản lý giờ làm việc</a></li>
+                        </ul>
+                    </nav>
+                </aside>
 
-            <!-- Các chức năng chính -->
-            <div class="row mt-4">
-                <div class="col-md-4 mb-3">
-                    <a href="/admin/employees" class="card-link">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5><i class="fas fa-users-cog"></i> Quản lý nhân sự</h5>
-                            </div>
+                <main class="main-content">
+                    <header class="topbar">
+                        <div class="company-info">
+                            <span class="name" style="font-weight: bold;">AZ</span>
+                            <span>Media</span>
                         </div>
-                    </a>
-                </div>
-                <!-- Thêm các chức năng khác -->
+                        <div class="logo-test">Testthuctap</div>
+                    </header>
+
+                    <section class="user-info">
+                        <img th:src="${user?.avatar ?: 'https://randomuser.me/api/portraits/women/44.jpg'}" 
+                             alt="User Avatar" 
+                             class="avatar" />
+                        <div class="text">
+                            <h2 th:text="'Hi, ' + ${user?.fullName ?: 'Admin'}"></h2>
+                            <p>Chào mừng bạn đến với hệ thống quản lý chấm công</p>
+                        </div>
+                    </section>
+
+                    <section class="tiles">
+                        <div class="tile blue">
+                            <h3>Danh sách chấm công</h3>
+                            <p>Theo dõi và quản lý chấm công của toàn bộ nhân viên.</p>
+                            <a th:href="@{/Admin/Attendance}">Xem danh sách →</a>
+                        </div>
+                        <div class="tile green">
+                            <h3>Thêm chấm công</h3>
+                            <p>Thêm bản ghi chấm công mới cho nhân viên.</p>
+                            <a th:href="@{/Admin/Attendance/add/{id}(id=${user?.id ?: 1})}">Thêm mới →</a>
+                        </div>
+                        <div class="tile orange">
+                            <h3>Chi tiết chấm công</h3>
+                            <p>Xem lịch sử chấm công chi tiết của từng nhân viên.</p>
+                            <a th:href="@{/Admin/Attendance/detail/{id}(id=${user?.id ?: 1})}">Xem chi tiết →</a>
+                        </div>
+                        <div class="tile red">
+                            <h3>Check-in nhanh</h3>
+                            <p>Chấm công giờ vào cho nhân viên ngay lập tức.</p>
+                            <form th:action="@{/Admin/Attendance/checkin/{id}(id=${user?.id ?: 1})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn-tile">Check-in →</button>
+                            </form>
+                        </div>
+                        <div class="tile yellow">
+                            <h3>Check-out nhanh</h3>
+                            <p>Chấm công giờ ra cho nhân viên ngay lập tức.</p>
+                            <form th:action="@{/Admin/Attendance/checkout/{id}(id=${user?.id ?: 1})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn-tile">Check-out →</button>
+                            </form>
+                        </div>
+                    </section>
+                </main>
             </div>
         </div>
+        
+    <!-- CSS -->
+    <style>
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'Segoe UI', sans-serif;
+      }
+
+      .container {
+          display: flex;
+          width: 100%;
+      }
+
+      .sidebar {
+          width: 220px;
+          background: #2d2d2d;
+          color: #fff;
+          padding: 20px;
+          min-height: 100vh;
+      }
+
+      .sidebar .mb-4 {
+          font-weight: bold;
+          font-size: 18px;
+      }
+
+      .sidebar ul {
+          list-style: none;
+      }
+
+      .sidebar li {
+          padding: 10px 0;
+          cursor: pointer;
+          border-left: 4px solid transparent;
+          padding-left: 10px;
+      }
+
+      .sidebar li.active,
+      .sidebar li:hover {
+          background: #444;
+          border-left: 4px solid #4fc3f7;
+      }
+
+      .sidebar a {
+          color: #fff;
+          text-decoration: none;
+          font-weight: bold;
+      }
+
+      .main-content {
+          flex: 1;
+          background: #f5f7fa;
+          padding: 20px;
+      }
+
+      .topbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: #007bff;
+          color: white;
+          padding: 10px 20px;
+          border-radius: 8px;
+          margin-bottom: 20px;
+      }
+
+      .logo-test {
+          font-weight: bold;
+          font-size: 20px;
+      }
+
+      .user-info {
+          display: flex;
+          align-items: center;
+          margin-bottom: 30px;
+      }
+
+      .user-info .avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          margin-right: 15px;
+          object-fit: cover;
+      }
+
+      .user-info .text h2 {
+          font-size: 24px;
+          margin-bottom: 5px;
+      }
+
+      .user-info .text p {
+          color: #666;
+      }
+
+      .tiles {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+      }
+
+      .tile {
+          padding: 20px;
+          border-radius: 10px;
+          color: #fff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease;
+      }
+
+      .tile:hover {
+          transform: translateY(-5px);
+      }
+
+      .tile h3 {
+          font-size: 18px;
+          margin-bottom: 10px;
+      }
+
+      .tile p {
+          font-size: 14px;
+          margin-bottom: 15px;
+      }
+
+      .tile a, .tile .btn-tile {
+          color: #fff;
+          text-decoration: none;
+          font-weight: bold;
+          background: rgba(255, 255, 255, 0.2);
+          padding: 5px 10px;
+          border-radius: 5px;
+          border: none;
+          cursor: pointer;
+      }
+
+      .tile a:hover, .tile .btn-tile:hover {
+          background: rgba(255, 255, 255, 0.4);
+      }
+
+      .tile.blue { background: #007bff; }
+      .tile.green { background: #28a745; }
+      .tile.orange { background: #fd7e14; }
+      .tile.red { background: #dc3545; }
+      .tile.yellow { background: #ffc107; }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+          .sidebar {
+              width: 100%;
+              min-height: auto;
+          }
+          .container {
+              flex-direction: column;
+          }
+          .tiles {
+              grid-template-columns: 1fr;
+          }
+      }
+  </style>
     </main>
+
 </body>
 </html>

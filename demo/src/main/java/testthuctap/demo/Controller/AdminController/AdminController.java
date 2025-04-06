@@ -16,13 +16,16 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 @RequestMapping("/Admin")
 public class AdminController {
 
     private final UserService userService;
-    private final WorkScheduleService workScheduleService; // Thêm service mới
+    private final WorkScheduleService workScheduleService;
     private static final String UPLOAD_DIR = "F:\\Githup\\thuctap\\Test-thuc-tap\\demo\\src\\main\\resources\\static\\img";
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
@@ -32,13 +35,11 @@ public class AdminController {
         this.workScheduleService = workScheduleService;
     }
 
-    // Trang chủ Admin
     @GetMapping
     public String adminHome() {
         return "Admin/Adminhome";
     }
 
-    // Hiển thị danh sách nhân viên
     @GetMapping("/employees")
     public String manageEmployees(Model model) {
         List<User> employees = userService.getAllEmployees();
