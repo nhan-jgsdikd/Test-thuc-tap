@@ -1,106 +1,210 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        main { flex: 1; padding: 20px; }
-        footer {
-            background-color: #cecece;
-            color: #000000;
-            padding: 40px 20px;
-            text-align: center;
-            animation: fadeIn 2s ease-in-out;
-        }
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .footer-section {
-            flex: 1;
-            min-width: 250px;
-            margin: 10px;
-        }
-        .footer-section h3 {
-            border-bottom: 2px solid #fff;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        .social-media a {
-            margin: 0 10px;
-            color: #fff;
-            font-size: 1.5em;
-            transition: color 0.3s;
-        }
-        .social-media a:hover { color: #c000fb; }
-        .map-container iframe {
-            width: 100%;
-            height: 200px;
-            border: 0;
-        }
-        .newsletter input {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border: none;
-            border-radius: 5px;
-        }
-        .newsletter button {
-            padding: 10px 20px;
-            background-color: #555;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-    </style>
-</head>
-<body>
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Về Chúng Tôi</h3>
-                <p>Chúng tôi là công ty hàng đầu trong lĩnh vực bắt cóc trái phép và buôn bán nô lệ, cam kết mang đến dịch vụ và sản phẩm chất lượng cao đúng cam kết ban đầu với pương châm làm việc là uy tín hàng đầu.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Thông Tin Liên Hệ</h3>
-                <p>Email: Dicampuchiahong@example.com</p>
-                <p>Phone: +84 971305479</p>
-                <div class="social-media">
-                    <a href="https://www.facebook.com"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://x.com"><i class="fab fa-twitter"></i></a>
-                    <a href="https://instagram.com"><i class="fab fa-instagram"></i></a>
+<html xmlns:th="http://www.thymeleaf.org">
+<footer class="footer py-5 bg-dark text-light">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Thông tin công ty -->
+            <div class="col-lg-4">
+                <div class="footer-info mb-4">
+                    <a href="/" class="d-block mb-3">
+                        <img src="/img/logotrungthu.jpg" alt="Logo HRM" class="img-fluid" style="max-height: 50px; border-radius: 10px;">
+                    </a>
+                    <p class="text-light">
+                        Hệ thống quản lý nhân sự hiện đại, cung cấp giải pháp tối ưu cho doanh nghiệp.
+                    </p>
+                    <div class="footer-social mt-4">
+                        <h5 class="text-white mb-3">Theo dõi chúng tôi</h5>
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a href="#" class="btn btn-outline-light btn-sm rounded-circle">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" class="btn btn-outline-light btn-sm rounded-circle">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" class="btn btn-outline-light btn-sm rounded-circle">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" class="btn btn-outline-light btn-sm rounded-circle">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="footer-section">
-                <h3>Đến Với Chúng Tôi</h3>
-                <div class="map-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.7063422818846!2d108.17105088442771!3d16.05348289404346!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219b509a30cfb%3A0xb93a05e26b3b28ff!2zVHLGsOG7nW5nIENhbyDEkeG6s25nIEZQVCBQb2x5dGVjaG5pYw!5e0!3m2!1svi!2s!4v1743342079492!5m2!1svi!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+            <!-- Liên hệ -->
+            <div class="col-lg-4">
+                <div class="footer-contact mb-4">
+                    <h5 class="text-white mb-3">Liên hệ</h5>
+                    <ul class="list-unstyled text-light">
+                        <li class="mb-3">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            123 Đường Nhân Sự, TP. Hồ Chí Minh, Việt Nam
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-phone-alt me-2"></i>
+                            (+84) 123 456 789
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope me-2"></i>
+                            support@hrmsystem.vn
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="footer-section newsletter">
-                <h3>Đăng Ký Ngay</h3>
-                <p>Nhận những thông tin và ưu đãi mới nhất để được đi sang cam chơi hé.</p>
-                <button type="submit"><a style=" color: white;text-decoration: none;" href="/contact">Đăng Ký</a></button>
+
+            <!-- Liên kết hữu ích và Đăng ký -->
+            <div class="col-lg-4">
+                <div class="footer-links mb-4">
+                    <h5 class="text-white mb-3">Liên kết hữu ích</h5>
+                    <ul class="list-unstyled text-light">
+                        <li><a href="/about" class="text-light text-decoration-none">Về chúng tôi</a></li>
+                        <li><a href="/services" class="text-light text-decoration-none">Dịch vụ</a></li>
+                        <li><a href="/contact" class="text-light text-decoration-none">Liên hệ</a></li>
+                        <li><a href="/faq" class="text-light text-decoration-none">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-subscribe">
+                    <h5 class="text-white mb-3">Đăng ký nhận tin</h5>
+                    <form action="#" class="d-flex">
+                        <input type="email" class="form-control me-2" placeholder="Nhập email của bạn">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-        <p>&copy; <span id="year"></span>FPT Polytechnic ©2025. All rights reserved.</p>
-    </footer>
 
-    <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
-</body>
+        <!-- Copyright -->
+        <div class="row border-top border-secondary pt-4 mt-4">
+            <div class="col-md-6">
+                <p class="text-light mb-0">
+                    © <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> HRM System. All Rights Reserved.
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <ul class="list-inline text-light mb-0">
+                    <li class="list-inline-item"><a href="/" class="text-light text-decoration-none">Trang chủ</a></li>
+                    <li class="list-inline-item"><a href="/terms" class="text-light text-decoration-none">Điều khoản</a></li>
+                    <li class="list-inline-item"><a href="/privacy" class="text-light text-decoration-none">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <a href="#" class="back-to-top btn btn-primary rounded-circle" id="backToTop">
+        <i class="fas fa-angle-up"></i>
+    </a>
+</footer>
+
+<!-- CSS -->
+<style>
+    .footer {
+        background-color: #1a1a1a;
+        color: #ffffff;
+        position: relative;
+    }
+
+    .footer h5 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .footer a {
+        color: #ffffff;
+        transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+        color: #007bff;
+    }
+
+    .footer-social .btn {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        padding: 0;
+        text-align: center;
+    }
+
+    .footer-contact i {
+        color: #007bff;
+    }
+
+    .footer-subscribe .form-control {
+        border-radius: 50px 0 0 50px;
+        background: #2e2e2e;
+        border: none;
+        color: #ffffff;
+    }
+
+    .footer-subscribe .form-control::placeholder {
+        color: #cccccc;
+    }
+
+    .footer-subscribe .btn {
+        border-radius: 0 50px 50px 0;
+        padding: 0 15px;
+    }
+
+    .back-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+    }
+
+    .back-to-top.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Responsive */
+    @media (max-width: 767.98px) {
+        .footer-contact,
+        .footer-links,
+        .footer-subscribe {
+            margin-top: 2rem;
+        }
+    }
+</style>
+
+<!-- JavaScript cho Back to Top -->
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const backToTop = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+</script>
 </html>

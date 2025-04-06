@@ -113,4 +113,9 @@ public class AttendanceService {
 
         return status;
     }
+
+    public void saveAttendance(Attendance attendance) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'saveAttendance'");
+    }
 }

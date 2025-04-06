@@ -46,4 +46,9 @@ public class UserService {
     public List<User> getAllUsers() {
         return userDAO.findAll();  // Assuming UserDAO extends JpaRepository
     }
+
+    public User getCurrentUser() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCurrentUser'");
+    }
 }

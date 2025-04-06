@@ -1,4 +1,4 @@
-package testthuctap.demo.Controller;
+package testthuctap.demo.Controller.PageController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,7 +44,7 @@ public class LoginController {
         if ("ADMIN".equals(user.getRole())) {
             return "redirect:/Admin"; 
         } else {
-            return "redirect:/Employee"; 
+            return "redirect:/home"; 
         }
     }
 

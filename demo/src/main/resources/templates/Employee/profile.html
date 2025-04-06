@@ -1,48 +1,229 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
       th:replace="~{/Nva/Layout :: view(~{::main})}">
-<head>
-    <title>Nhân viên - Hồ sơ cá nhân</title>
-</head>
 <body>
-    <main th:fragment="content">
-        <div class="container mt-4">
-            <div class="row">
-                <!-- Thông tin người dùng -->
-                <div class="col-md-4">
-                    <div class="card profile-card">
-                        <div class="card-body text-center">
-                            <img th:src="${user?.avatar ?: '/images/default-avatar.png'}"
-                                 class="rounded-circle mb-3"
-                                 alt="Avatar"
-                                 width="120">
-                            <h4 th:text="${user.fullName}"></h4>
-                            <p class="text-muted"
-                               th:text="${user.position?.positionName ?: 'Chưa có chức vụ'}"></p>
-                            <a href="/Profile/Edit" class="btn btn-primary mt-2">Chỉnh sửa hồ sơ</a>
+<main th:fragment="content">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        .profile-container {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease;
+            overflow: hidden;
+        }
+
+ 
+
+        .avatar-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+}
+
+
+        .profile-avatar {
+            width: 140px;
+            height: 140px;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 0.75rem;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .btn-edit {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 1rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+
+    <div class="profile-container">
+        <div class="container">
+            <div class="profile-card">
+                <!-- Avatar Section -->
+                <div class="avatar-wrapper">
+                    <img th:src="${user?.avatar ?: '/images/default-avatar.png'}" 
+                         class="profile-avatar rounded-circle" 
+                         alt="User Avatar">
+                </div>
+
+                <!-- Profile Content -->
+                <div class="profile-header text-center">
+                    <h3 class="mb-2 fw-600" th:text="${user.fullName}"></h3>
+                    <div class="d-flex justify-content-center align-items-center gap-2">
+                        <span class="text-muted" th:text="${user.position?.positionName ?: 'Chưa có chức vụ'}"></span>
+                        <span class="status-badge" 
+                              :style="{'color': ${user.status == 'Đang làm việc'} ? '#22c55e' : '#ef4444', 
+                                       'background': ${user.status == 'Đang làm việc'} ? '#dcfce7' : '#fee2e2'}">
+                            <span th:text="${user.status ?: 'Chưa cập nhật'}"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Info Grid -->
+                <div class="info-grid">
+                    <!-- Personal Info -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small mb-1">Email</div>
+                            <div class="fw-medium" th:text="${user.email ?: 'Chưa cập nhật'}"></div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small mb-1">Điện thoại</div>
+                            <div class="fw-medium" th:text="${user.phone ?: 'Chưa cập nhật'}"></div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small mb-1">Địa chỉ</div>
+                            <div class="fw-medium" th:text="${user.address ?: 'Chưa cập nhật'}"></div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-birthday-cake"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small mb-1">Ngày sinh</div>
+                            <div class="fw-medium" th:text="${user.dateOfBirth ?: 'Chưa cập nhật'}"></div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small mb-1">Ngày vào làm</div>
+                            <div class="fw-medium" th:text="${user.hireDate ?: 'Chưa cập nhật'}"></div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small mb-1">Lần đăng nhập cuối</div>
+                            <div class="fw-medium" th:text="${user.lastLogin ?: 'Chưa đăng nhập'}"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Chi tiết thông tin -->
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Thông tin cá nhân</h5>
-                        </div>
-                        <div class="card-body">
-                            <p><strong>Email:</strong> <span th:text="${user.email ?: 'Chưa cập nhật'}"></span></p>
-                            <p><strong>Số điện thoại:</strong> <span th:text="${user.phone ?: 'Chưa cập nhật'}"></span></p>
-                            <p><strong>Địa chỉ:</strong> <span th:text="${user.address ?: 'Chưa cập nhật'}"></span></p>
-                            <p><strong>Ngày sinh:</strong> <span th:text="${user.dateOfBirth ?: 'Chưa cập nhật'}"></span></p>
-                            <p><strong>Ngày vào làm:</strong> <span th:text="${user.hireDate ?: 'Chưa cập nhật'}"></span></p>
-                            <p><strong>Trạng thái:</strong> <span th:text="${user.status ?: 'Chưa cập nhật'}"></span></p>
-                            <p><strong>Lần đăng nhập cuối:</strong> <span th:text="${user.lastLogin ?: 'Chưa đăng nhập'}"></span></p>
-                        </div>
-                    </div>
+                <!-- Action Button -->
+                <div class="text-center pb-3">
+                    <a href="/Profile/Edit" class="btn-edit">
+                        <i class="fas fa-edit"></i>
+                    </a>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 </body>
 </html>

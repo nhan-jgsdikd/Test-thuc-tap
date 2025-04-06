@@ -4,54 +4,343 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập - Quản lý nhân sự</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,800">
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
         body {
-            background-color: #f8f9fa;
+            background: #A1b5d8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
             height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin: 0;
+        }
+
+        p {
+            font-size: 14px;
+            font-weight: 100;
+            line-height: 20px;
+            letter-spacing: 0.5px;
+            margin: 20px 0 30px;
+        }
+
+        a {
+            color: #333;
+            font-size: 14px;
+            text-decoration: none;
+            margin: 15px 0;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid #00b894;
+            background-color: #00b894;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 12px 45px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: transform 80ms ease-in, background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00a082;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        button.ghost {
+            background-color: transparent;
+            border-color: #FFFFFF;
+        }
+
+        form {
+            background-color: #FFFFFF;
             display: flex;
             align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 50px;
+            height: 100%;
+            text-align: center;
         }
-        .login-container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 30px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+
+        input {
+            background-color: #eee;
+            border: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            background-color: #ddd;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            position: relative;
+            overflow: hidden;
+            width: 768px;
+            max-width: 100%;
+            min-height: 480px;
+        }
+
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .sign-in-container {
+            left: 0;
+            width: 50%;
+            z-index: 2;
+        }
+
+        .container.right-panel-active .sign-in-container {
+            transform: translateX(100%);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .intro-container {
+            left: 0;
+            width: 50%;
+            opacity: 0;
+            z-index: 1;
+            background-color: #FFFFFF;
+            padding: 0 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .container.right-panel-active .intro-container {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+        }
+
+        .intro-container img {
+            margin-top: 20px;
+            max-width: 200px; /* Giới hạn chiều rộng ảnh */
+            height: auto;
+            margin-bottom: 20px; /* Khoảng cách giữa ảnh và nội dung */
+            border-radius: 10px; /* Bo góc ảnh */
+        }
+
+        .intro-container ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0 0;
+            text-align: left;
+        }
+
+        .intro-container ul li {
+            font-size: 13px;
+            color: #555;
+            margin: 10px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .intro-container ul li:before {
+            content: "✔";
+            color: #00b894;
+            position: absolute;
+            left: 0;
+            font-size: 16px;
+        }
+
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+
+        .container.right-panel-active .overlay-container {
+            transform: translateX(-100%);
+        }
+
+        .overlay {
+            background: linear-gradient(to right, #222e50, #222e50);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 0 0;
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .container.right-panel-active .overlay {
+            transform: translateX(50%);
+        }
+
+        .overlay-panel {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            text-align: center;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .overlay-left {
+            transform: translateX(-20%);
+        }
+
+        .container.right-panel-active .overlay-left {
+            transform: translateX(0);
+        }
+
+        .overlay-right {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        .container.right-panel-active .overlay-right {
+            transform: translateX(20%);
+        }
+
+        /* Thông báo lỗi */
+        .error-message {
+            color: #c62828;
+            font-size: 12px;
+            margin: 10px 0;
+            background: #ffebee;
+            padding: 8px;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                min-height: 400px;
+            }
+
+            form, .intro-container {
+                padding: 0 30px;
+            }
+
+            button {
+                padding: 10px 30px;
+            }
+
+            .intro-container ul li {
+                font-size: 12px;
+            }
+
+            .intro-container img {
+                max-width: 80px; /* Giảm kích thước ảnh trên mobile */
+            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2 class="text-center mb-4">Đăng nhập hệ thống</h2>
-        
-        <!-- Hiển thị thông báo lỗi -->
-        <div th:if="${error}" class="alert alert-danger" role="alert">
-            [[${error}]]
+    <div class="container" id="container">
+        <!-- Đăng nhập -->
+        <div class="form-container sign-in-container">
+            <form th:action="@{/login}" method="post">
+                <h1>Đăng nhập</h1>
+                <span>Sử dụng tài khoản của bạn</span>
+                <div th:if="${error}" class="error-message">
+                    [[${error}]]
+                </div>
+                <input type="email" name="email" placeholder="Email" required />
+                <input type="password" name="password" placeholder="Mật khẩu" required />
+                <a href="#">Quên mật khẩu?</a>
+                <button type="submit">Đăng nhập</button>
+            </form>
         </div>
 
-        <form th:action="@{/login}" method="post">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" 
-                       class="form-control" 
-                       id="email" 
-                       name="email"
-                       required>
+        <!-- Giới thiệu -->
+        <div class="intro-container">
+            <img src="/img/image.png" alt="Hệ thống quản lý nhân sự">
+            <h1>Quản lý nhân sự</h1>
+            <p>Hệ thống quản lý nhân sự hiện đại, giúp doanh nghiệp tối ưu hóa quy trình quản lý nhân sự một cách dễ dàng và hiệu quả.</p>
+            <ul>
+                <li>Quản lý thông tin nhân viên toàn diện.</li>
+                <li>Chấm công tự động, chính xác.</li>
+                <li>Tính lương minh bạch, nhanh chóng.</li>
+                <li>Giao diện thân thiện, dễ sử dụng.</li>
+            </ul>
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Quay lại đăng nhập!</h1>
+                    <p>Vui lòng đăng nhập để tiếp tục</p>
+                    <button class="ghost" id="signIn">Đăng nhập</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Tìm hiểu thêm về hệ thống của chúng tôi</h1>
+                    <p>Khám phá và tìm hiểu thêm về dịch vụ mà chúng tôi cung cấp</p>
+                    <button class="ghost" id="intro">Giới thiệu</button>
+                </div>
             </div>
-            
-            <div class="mb-3">
-                <label for="password" class="form-label">Mật khẩu</label>
-                <input type="password" 
-                       class="form-control" 
-                       id="password" 
-                       name="password"
-                       required>
-            </div>
-            
-            <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
-        </form>
+        </div>
     </div>
+
+    <script>
+        const introButton = document.getElementById('intro');
+        const signInButton = document.getElementById('signIn');
+        const container = document.getElementById('container');
+
+        introButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+        });
+
+        signInButton.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
+    </script>
 </body>
 </html>
