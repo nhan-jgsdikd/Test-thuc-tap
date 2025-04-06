@@ -7,86 +7,183 @@
 <body>
     <main th:fragment="content">
         <div class="container-fluid mt-4">
-            <!-- Thông báo -->
-            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-                <span th:text="${success}"></span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            
-            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                <span th:text="${error}"></span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="/src/main/resources/static/css/companystaff.css">
+</head>
+<body>
+    <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  body {
+    display: flex;
+    height: 100vh;
+    color: #333;
+  }
+  
+  .container {
+    display: flex;
+    width: 100%;
+  }
+  
+  .sidebar {
+    width: 220px;
+    background: #2d2d2d;
+    color: #fff;
+    padding: 20px;
+  }
+  
+  .sidebar .logo {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+  }
+  
+  .sidebar li {
+    padding: 10px 0;
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    padding-left: 10px;
+  }
+  
+  .sidebar li.active,
+  .sidebar li:hover {
+    background: #444;
+    border-left: 4px solid #4fc3f7;
+  }
+  
+  .main-content {
+    flex: 1;
+    background: #f5f7fa;
+    padding: 20px;
+  }
+  
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .logo-test {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  .active a{
+    margin-top: auto;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  .table img{
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+  }
 
-            <h1 class="mb-4"><i class="fas fa-user-shield"></i> Quản lý nhân viên</h1>
-
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Danh sách nhân viên</h6>
-                    <a th:href="@{/Admin/employees/add}" class="btn btn-success btn-sm">
-                        <i class="fas fa-plus"></i> Thêm mới
+    </style>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="mb-4"><i class="fas fa-user-shield"></i> <a href="/Admin">Trang quản trị</a></div>
+      <nav>
+        <ul class="active">
+          <li><a href="/Admin/employees">Quản lý nhân sự</a></li>
+          <li><a href="/Admin/edit-employee">Chỉnh sửa nhân viên</a></li>
+          <li><a href="/Admin/Attendance">Quản lý Chấm công</a></li>
+          <li><a href="/AdminAttendanceDetail">Chi tiết Chấm công</a></li>
+          <li><a href="/AdminPayroll">Quản lý Lương</a></li>
+          <li><a href="/AdminPayrollDetail">Chi tiết bảng lương</a></li>
+          <li><a href="/AdminPayrollDetail">Chỉnh sửa bảng lương</a></li>
+          <li><a href="/AdminWorkSchedule">Quản lý giờ làm việc</a></li>
+          <li><a href="/AdminWorkScheduleDetail">Chi tiết giờ làm việc</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <header class="topbar">
+        <div class="company-info">
+          <span class="name" style="font-weight: bold;">AZ</span>
+          <span>Media</span>
+        </div>
+        <div class="logo-test">Testthuctap</div>
+      </header>
+      <div class="card-header" style="float: right; margin-bottom: 10px;">
+        <a th:href="@{/Admin/employees/add}" class="btn btn-success btn-sm">
+            <i class="fas fa-plus"></i> Thêm mới
+        </a>
+    </div>
+      <table class="table table-bordered table-striped table-hover align-middle mt-3">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Họ và tên</th>
+            <th>Ảnh</th>
+            <th>Email</th>
+            <th>Chức vụ</th>
+            <th>Số điện thoại</th>
+            <th>Địa chỉ</th>
+            <th>Ngày sinh</th>
+            <th>Role</th>
+            <th colspan="3" class="text-center">Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${employees}">
+                <td th:text="${user.ID} ?: 'Chưa cập nhật'"></td>
+                <td th:text="${user.fullName} ?: 'Chưa cập nhật'"></td>
+                <td th:text="${user.Avatar} ?: 'Chưa cập nhật'"></td>
+                <td th:text="${user.email} ?: 'N/A'"></td>
+                <td th:text="${user.position?.positionName} ?: 'Chưa xác định'"></td>
+                <td th:text="${user.phone} ?: 'N/A'"></td>
+                <td th:text="${user.addess} ?: 'Chưa cập nhật''"></td>
+                <td th:text="${#temporals.format(user.hireDate, 'dd/MM/yyyy')} ?: 'N/A'"></td>
+                <td th:text="${user.Role} ?: 'Chưa cập nhật''"></td>
+                <td>
+                    <a th:href="@{/Admin/employees/edit/{id}(id=${user.id})}" 
+                    class="btn btn-primary btn-sm"
+                    title="👁 Xem">
+                     <i class="fas fa-edit">👁 Xem</i>
+                 </a>
+                </td>
+                <td>
+                    <a th:href="@{/Admin/employees/edit/{id}(id=${user.id})}" 
+                       class="btn btn-primary btn-sm"
+                       title="✏️ Sửa">
+                        <i class="fas fa-edit">✏️ Sửa</i>
                     </a>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Họ tên</th>
-                                    <th>Vị trí</th>
-                                    <th>Email</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Ngày vào làm</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="user : ${employees}">
-                                    <td th:text="${user.fullName} ?: 'Chưa cập nhật'"></td>
-                                    <td th:text="${user.position?.positionName} ?: 'Chưa xác định'"></td>
-                                    <td th:text="${user.email} ?: 'N/A'"></td>
-                                    <td th:text="${user.phone} ?: 'N/A'"></td>
-                                    <td th:text="${#temporals.format(user.hireDate, 'dd/MM/yyyy')} ?: 'N/A'"></td>
-                                    <td>
-                                        <span th:class="${user.status == 'ACTIVE'} ? 
-                                            'badge badge-success' : 'badge badge-danger'" 
-                                            style="color: white;"
-                                            th:text="${user.status == 'ACTIVE'} ? 
-                                            'Đang làm việc' : 'Đã nghỉ'">
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a th:href="@{/Admin/employees/edit/{id}(id=${user.id})}" 
-                                           class="btn btn-primary btn-sm"
-                                           title="Chỉnh sửa">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        
-                                        <!-- Form xóa ẩn -->
-                                        <form th:action="@{/Admin/employees/delete/{id}(id=${user.id})}" 
-                                              method="post" 
-                                              style="display: inline-block;"
+                    
+                    <!-- Form xóa ẩn -->
+                    <form th:action="@{/Admin/employees/delete/{id}(id=${user.id})}" 
+                          method="post"
+                          style="display: inline-block;"
                                               onsubmit="return confirm('Bạn chắc chắn muốn xóa?');">
                                             <button type="submit" 
                                                     class="btn btn-danger btn-sm ml-1"
-                                                    title="Xóa">
+                                                    title="🗑 Xóa">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
                                     </td>
                                 </tr>
                             </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+      </table>
     </main>
-</body>
+</div>
 </html>

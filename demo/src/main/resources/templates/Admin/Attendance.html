@@ -70,7 +70,6 @@
                 </div>
             </div>
 
-            <!-- Form thêm chấm công (hiển thị khi truy cập /add/{userId}) -->
             <div th:if="${user}" class="form-container">
                 <h2>Thêm chấm công cho <span th:text="${user.fullName}"></span></h2>
                 <form th:action="@{/Admin/Attendance/add/{userId}(userId=${user.id})}" method="post">

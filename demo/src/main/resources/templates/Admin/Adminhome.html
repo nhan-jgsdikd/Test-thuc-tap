@@ -7,34 +7,102 @@
 <body>
     <main th:fragment="content">
         <div class="container-fluid mt-4">
-            <h1 class="mb-4"><i class="fas fa-user-shield"></i> Trang quản trị</h1>
-            
-            <!-- Thống kê nhanh -->
-            <div class="row quick-stats">
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">
-                            <h5><i class="fas fa-users"></i> Tổng nhân viên</h5>
-                            <h3 th:text="${totalEmployees}">0</h3>
-                        </div>
-                    </div>
-                </div>
-                <!-- Thêm các thống kê khác -->
-            </div>
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard UI</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="mb-4"><i class="fas fa-user-shield"></i> <a href="/Admin">Trang quản trị</a></div>
+      <nav>
+        <ul class="active">
+          <li><a href="/Admin/employees">Quản lý nhân sự</a></li>
+          <li><a href="edit-employee">Chỉnh sửa nhân viên</a></li>
+          <li><a href="/Admin/Attendance">Quản lý Chấm công</a></li>
+          <li><a href="AttendanceDetail">Chi tiết Chấm công</a></li>
+          <li><a href="Payroll">Quản lý Lương</a></li>
+          <li><a href="PayrollDetail">Chi tiết bảng lương</a></li>
+          <li><a href="PayrollDetail">Chỉnh sửa bảng lương</a></li>
+          <li><a href="WorkSchedule">Quản lý giờ làm việc</a></li>
+          <li><a href="WorkScheduleDetail">Chi tiết giờ làm việc</a></li>
+        </ul>
+      </nav>
+    </aside>
 
-            <!-- Các chức năng chính -->
-            <div class="row mt-4">
-                <div class="col-md-4 mb-3">
-                    <a href="/admin/employees" class="card-link">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5><i class="fas fa-users-cog"></i> Quản lý nhân sự</h5>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <!-- Thêm các chức năng khác -->
-            </div>
+    <main class="main-content">
+      <header class="topbar">
+        <div class="company-info">
+          <span class="name" style="font-weight: bold;">AZ</span>
+          <span>Media</span>
+        </div>
+        <div class="logo-test">Testthuctap</div>
+      </header>
+
+      <section class="user-info">
+        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User Avatar" />
+        <div class="text">
+          <h2>Hi, Jane Doe</h2>
+          <p>Chào mừng bạn đến với chúng tôi</p>
+        </div>
+      </section>
+
+      <section class="tiles">
+        <div class="tile red">
+          <h3>Quản lý nhân sự</h3>
+          <p>Dễ dàng quản lý thông tin của toàn bộ nhân viên.</p>
+          <a href="companystaff.html">View →</a>
+        </div>
+        <div class="tile green">
+          <h3>Chỉnh sửa nhân viên</h3>
+          <p>Cập nhật nhanh chóng thông tin cá nhân và vị trí công việc.</p>
+          <a href="edit-employee.html">View →</a>
+        </div>
+        <div class="tile blue">
+          <h3>Quản lý Chấm công</h3>
+          <p>Theo dõi, kiểm tra và quản lý dữ liệu chấm công nhân viên.</p>
+          <a href="Attendance.html">View →</a>
+        </div>
+        <div class="tile gray">
+            <h3>Chi tiết Chấm công</h3>
+            <p>Xem lịch sử và chi tiết ngày công của từng nhân viên.</p>
+            <a href="AttendanceDetail.html">View →</a>
+        </div>
+        <div class="tile orange">
+            <h3>Quản lý Lương</h3>
+            <p>Tổng hợp và kiểm soát bảng lương của nhân viên.</p>
+            <a href="Payroll.html">View →</a>
+        </div>
+        <div class="tile green-light">
+            <h3>Chi tiết bảng lương</h3>
+            <p>Xem chi tiết các khoản thu nhập và khấu trừ của nhân viên.</p>
+            <a href="PayrollDetail.html">View →</a>
+        </div>
+        <div class="tile red-light">
+            <h3>Chỉnh sửa bảng lương</h3>
+            <p>Điều chỉnh lương, thưởng và các khoản phụ cấp linh hoạt.</p>
+            <a href="PayrollEdit.html">View →</a>
+        </div>
+        <div class="tile blue-light">
+            <h3>Quản lý giờ làm việc </h3>
+            <p>Lập kế hoạch và theo dõi lịch làm việc của từng nhân viên.</p>
+            <a href="WorkSchedule.html">View →</a>
+        </div>
+        <div class="tile yellow">
+            <h3>Chi tiết giờ làm việc</h3>
+            <p>Xem cụ thể ca làm và số giờ làm việc của từng nhân viên.</p>
+            <a href="WorkScheduleDetail.html">View →</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+     
         </div>
     </main>
 </body>
